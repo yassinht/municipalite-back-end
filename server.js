@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 //connection to db
 const dbConnection = require('./db/mongoose');
 dotenv.config({ path: "config.env" });
-
+let msg="https://github.com/yassinht/municipalite-back-end"
 
 
 
@@ -66,6 +66,8 @@ app.use('/reclamation', reclamationRoutesApi);
 
 //TEST API 
 app.get('/', (req, res) => res.status(200).send({ message: "Welcome to the server" }))
+
+app.get('/rules', (req, res) => res.status(200).send({ msg}))
 
 //RUNNING SERVER
 app.listen(port, () => console.log(`server works on port ${port}`));
