@@ -9,13 +9,13 @@ router.post('/', agentBController.createAgentB);
 
 router.post('/login', agentBController.login);
 
-router.get('/:id',agentBController.getAgentBById);
+router.get('/:id',verifyToken,agentBController.getAgentBById);
 
-router.get('/', agentBController.GetAllAgentBs);
+router.get('/',verifyToken, agentBController.GetAllAgentBs);
 
-router.put('/:id',agentBController.updatedagentB);
+router.put('/:id',verifyToken,agentBController.updatedagentB);
 
-router.delete('/:id', agentBController.deleteById);
+router.delete('/:id',verifyToken, agentBController.deleteById);
 
 
 module.exports = router;

@@ -72,9 +72,6 @@ exports.createAgentM=  async (req, res) => {
       if (!agentM) {
         res.status(401).send('Invalid Email')
       }
-      else if (!agentM.account_state) {
-        res.status(404).send('Compte blocké')
-      }
       else {
         const validPassword = bcrypt.compareSync(agentMData.password, agentM.password);
         if (!validPassword) {
@@ -112,7 +109,7 @@ exports.createAgentM=  async (req, res) => {
 
   exports.getAll = async (req, res) => {
     try {
-      let agentMs = await AgentM.find({ archived: false })
+      let agentMs = await AgentM.find()
       res.status(200).send(agentMs);
     } catch (error) {
       res.status(400).send({ message: "Erreur", error });

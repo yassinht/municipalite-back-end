@@ -119,26 +119,32 @@ exports.createAgentB=   async (req, res) => {
 
   exports.updatedagentB = async (req, res) => {
     try {
-      let id = req.params.id;
-      let data = req.body
+      const id = req.params.id;
+      const data = req.body;
   
-      data.password ? data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)) : delete data.password
-  
-      let updatedagentB = await AgentB.findByIdAndUpdate({ _id: id }, data, { new: true })
-  
-      if (!updatedagentB) {
-        res.status(404).send('not found')
-      } else {
-        let payload = { subject: updatedagentB }
-        let token = jwt.sign(payload, 'secretKey')
-        res.status(200).send({ token });
+      if (data.password) {
+        const salt = bcrypt.genSaltSync(10);
+        data.password = bcrypt.hashSync(data.password, salt);
       }
   
+      const updatedagentB = await AgentB.findByIdAndUpdate(id, data, { new: true });
+  
+      if (!updatedagentB) {
+        return res.status(404).send('AgentB not found');
+      }
+  
+      const payload = { subject: updatedagentB };
+      const token = jwt.sign(payload, 'secretKey');
+  
+      res.status(200).send({ message: 'AgentB updated successfully', token });
     } catch (error) {
-      res.status(400).send({ message: "Erreur", error });
+      res.status(400).send({ message: 'Error updating agentB', error });
     }
   };
-
+  
+  
+  
+  
   exports.deleteById =   async (req, res) => {
     try {
       let id = req.params.id;

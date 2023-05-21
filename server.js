@@ -20,6 +20,9 @@ const catRecRuotesApi = require('./routes/catRecRuotes');
 const categpryRoutesApi = require('./routes/categpryRoutes');
 const citoyenRoutesApi = require('./routes/citoyenRoutes');
 const reclamationRoutesApi = require('./routes/reclamationRoutes');
+const asseignRoutesApi = require('./routes/assignReclamationRoutes');
+const opinionRoutesApi = require('./routes/opinionRoutes');
+const confirmRoutesApi = require('./routes/confirmRoutes');
 
 
 
@@ -56,9 +59,12 @@ app.use('/admin', AdminApi);
 app.use('/agentB', agentBRoutesApi);
 app.use('/agentM', agentMRoutesApi);
 app.use('/catRec', catRecRuotesApi);
-app.use('/categpry', categpryRoutesApi);
+app.use('/category', categpryRoutesApi);
 app.use('/citoyen', citoyenRoutesApi);
 app.use('/reclamation', reclamationRoutesApi);
+app.use('/asseign', asseignRoutesApi);
+app.use('/opinion', opinionRoutesApi);
+app.use('/confirm', confirmRoutesApi);
 
 
 

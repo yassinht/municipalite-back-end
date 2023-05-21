@@ -32,14 +32,14 @@ router.post('/', upload.any('image'), agentMController.createAgentM);
 
 router.post('/login', agentMController.login);
 
-router.get('/:id',verifyToken, agentMController.getById);
+router.get('/:id', agentMController.getById);
 
-router.get('/',verifyToken, agentMController.getAll);
+router.get('/', agentMController.getAll);
 
-router.put('/:id',verifyToken, agentMController.updatedagentM);
+router.put('/:id', agentMController.updatedagentM);
 
 
-router.delete('/:id', verifyToken, agentMController.deleteById);
+router.delete('/:id', agentMController.deleteById);
 
 
 
