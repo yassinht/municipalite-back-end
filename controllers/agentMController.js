@@ -16,53 +16,42 @@ let filename1 = [];
 
 
 
-exports.createAgentM=  async (req, res) => {
-    try {
-      let obj = req.body;
-      let agentM = new AgentM(obj);
-  
-  
-      let findEmailInAgentB = await AgentB.findOne({ email: agentM.email })
-      let findEmailInAgentM = await AgentM.findOne({ email: agentM.email })
-  
-  
-      if (!findEmailInAgentB && !findEmailInAgentM) {
-  
-        try {
-          const salt = bcrypt.genSaltSync(10);
-          // now we set user password to hashed password
-          agentM.password = bcrypt.hashSync(agentM.password, salt);
-  
-          filename1[0] ? agentM.photo = filename1[0] : agentM.photo = 'default.png';
-          agentM.account_state = true;
-          agentM.archived = false;
-          agentM.added_date = new Date();
-  
-  
-          let savedagentM = await agentM.save()
-          filename1 = []
-  
-          if (!savedagentM) {
-            res.status(404).send('not found')
-          } else {
-            res.status(200).send(savedagentM);
-          }
-        } catch (error) {
-          console.log(error);
-          res.status(400).send({ message: "Erreur", error });
-        }
-  
-  
-      } else {
-        res.status(404).send('email invalid')
-      }
-  
-  
-    } catch (error) {
-      res.status(400).send({ message: "Erreur", error });
-    }
-  };
+exports.createAgentM = async (req, res) => {
+  try {
+    let obj = req.body;
+    let agentM = new AgentM(obj);
 
+    let findEmailInAgentB = await AgentB.findOne({ email: agentM.email });
+    let findEmailInAgentM = await AgentM.findOne({ email: agentM.email });
+
+    if (!findEmailInAgentB && !findEmailInAgentM) {
+      try {
+        const salt = bcrypt.genSaltSync(10);
+        agentM.password = bcrypt.hashSync(agentM.password, salt);
+        filename1[0] ? (agentM.photo = filename1[0]) : (agentM.photo = 'default.png');
+        agentM.account_state = true;
+        agentM.archived = false;
+        agentM.added_date = new Date();
+
+        let savedAgentM = await agentM.save();
+        filename1 = [];
+
+        if (!savedAgentM) {
+          res.status(404).send('not found');
+        } else {
+          res.status(200).send(savedAgentM);
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: 'Erreur', error });
+      }
+    } else {
+      res.status(404).send('email invalid');
+    }
+  } catch (error) {
+    res.status(400).send({ message: 'Erreur', error });
+  }
+};
   exports.login =  async (req, res) => {
     try {
       let agentMData = req.body
@@ -105,7 +94,18 @@ exports.createAgentM=  async (req, res) => {
       res.status(400).send({ message: "Erreur", error });
     }
   }
-
+  exports.getByResponsabilite = async (req, res) => {
+    try {
+      const { categoryId } = req.params;
+  
+      const agentMs = await AgentM.find({ responsabilite: categoryId }).populate('responsabilite');
+  
+      res.status(200).send(agentMs);
+    } catch (error) {
+      res.status(400).send({ message: "Erreur", error });
+    }
+  };
+  
 
   exports.getAll = async (req, res) => {
     try {

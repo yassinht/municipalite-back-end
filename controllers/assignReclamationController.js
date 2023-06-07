@@ -1,9 +1,91 @@
 const { AgentM } = require('../models/agentM');
+const { AgentB } = require('../models/agentB');
+
 const { AssignReclamation } = require('../models/assignReclamation');
 const { Reclamation } = require('../models/reclamation');
 
 
+// admin to bureau ************************
+exports.assignReclamationToAgentB = async (req, res) => {
+  try {
+    const { reclamationId, agentBId } = req.params;
 
+    const reclamation = await Reclamation.findById(reclamationId);
+    if (!reclamation) {
+      res.status(404).send({ message: 'Reclamation not found.' });
+    }
+
+    const agentB = await AgentB.findById(agentBId);
+    if (!agentB) {
+      res.status(404).send({ message: 'AgentB not found.' });
+    }
+
+    const assignReclamation = new AssignReclamation({
+      reclamation: reclamationId,
+      agentB: agentBId
+    });
+    await assignReclamation.save();
+
+    // Update the status of the assigned reclamation to true
+    await Reclamation.findByIdAndUpdate(reclamationId, { status: true });
+
+    res.status(200).send({ message: 'Reclamation assigned to AgentB successfully.', reclamation });
+  } catch (error) {
+    res.status(400).send({ message: 'Error assigning reclamation to AgentB.', error });
+  }
+};
+
+
+
+
+exports.getAllAssignReclamationToBureau = async (req, res) => {
+  const{BureaId }=req.params
+  try {
+    const assignReclamations = await AssignReclamation.find({agentB: { $ne: null } });
+    res.status(200).send(assignReclamations);
+  } catch (error) {
+    res.status(400).send({ message: 'Failed to get assignReclamations to agent Bureau .', error });
+  }
+};
+
+exports.getAssignReclamationByAgentB = async (req, res) => {
+ const idAgentB= req.params.agentB
+ console.log(idAgentB)
+  try {
+    const assignReclamations = await AssignReclamation.find({ agentB: idAgentB })
+      .populate('reclamation');
+
+    if (!assignReclamations || assignReclamations.length === 0) {
+      return res.status(404).send({ message: 'No AssignReclamations found for the agentM.' });
+    }
+
+  
+    res.status(200).send(assignReclamations);
+  } catch (error) {
+    res.status(400).send({ message: 'Failed to get AssignReclamations for the agentM.', error });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// bureau to mission******************************************
 exports.assignReclamationToAgentM = async (req, res) => {
     try {
       const { reclamationId, agentMId } = req.params;

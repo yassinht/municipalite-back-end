@@ -34,6 +34,8 @@ router.post('/login', agentMController.login);
 
 router.get('/:id', agentMController.getById);
 
+router.get('/responsabilty/:categoryId', agentMController.getByResponsabilite);
+
 router.get('/', agentMController.getAll);
 
 router.put('/:id', agentMController.updatedagentM);
