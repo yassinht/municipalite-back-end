@@ -4,13 +4,11 @@ const {Opinion}=require('../models/opinion')
 
 exports.addOpinion = async (req, res) => {
     try {
-      const { opinion, citoyenId, reclamationId } = req.body;
+      const { opinion } = req.body;
   
       // Create a new opinion
       const newOpinion = new Opinion({
         opinion: opinion,
-        citoyen: citoyenId,
-        reclamation: reclamationId,
       });
   
       // Save the opinion
@@ -23,19 +21,6 @@ exports.addOpinion = async (req, res) => {
   };
 
 
-
-  exports.getOpinionsByReclamation = async (req, res) => {
-    try {
-      const { reclamationId } = req.params;
-  
-      // Find opinions by reclamation ID
-      const opinions = await Opinion.find({ reclamation: reclamationId });
-  
-      res.status(200).send(opinions);
-    } catch (error) {
-      res.status(400).send({ message: 'Failed to get opinions for the reclamation.', error });
-    }
-  };
 
   // Get all opinions
 exports.getAllOpinions = async (req, res) => {
