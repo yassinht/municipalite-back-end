@@ -58,3 +58,44 @@ exports.login = async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
   };
+
+  exports.deleteCitoyenById = async (req, res) => {
+    console.log('hello')
+  try {
+    const { id } = req.params;
+    console.log(id)
+    const citoyen = await Citoyen.findByIdAndDelete(id);
+    if (!citoyen) {
+      return res.status(404).json({ message: 'Citoyen not found' });
+    } else {
+      return res.status(200).send(citoyen);
+    }
+  } catch (error) {
+    return res.status(400).send({ message: 'Erreur', error });
+  }
+};
+
+
+
+
+exports.updatedcitoyen = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+
+    const updatedCitoyen = await Citoyen.findByIdAndUpdate(id, data, { new: true });
+
+    if (!updatedCitoyen) {
+      return res.status(404).send({ message: 'Citoyen not found' });
+    }
+
+    const payload = { subject: updatedCitoyen };
+    const token = jwt.sign(payload, 'secretKey');
+
+    res.status(200).send({ message: 'Citoyen updated successfully', token });
+  } catch (error) {
+    res.status(400).send({ message: 'Error updating Citoyen', error });
+  }
+};
+
+

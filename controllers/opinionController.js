@@ -4,7 +4,8 @@ const {Opinion}=require('../models/opinion')
 
 exports.addOpinion = async (req, res) => {
     try {
-      const { opinion } = req.body;
+
+      const { opinion,id } = req.body;
   
       // Create a new opinion
       const newOpinion = new Opinion({

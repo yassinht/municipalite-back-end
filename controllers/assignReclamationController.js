@@ -41,7 +41,7 @@ exports.assignReclamationToAgentB = async (req, res) => {
 exports.getAllAssignReclamationToBureau = async (req, res) => {
   const{BureaId }=req.params
   try {
-    const assignReclamations = await AssignReclamation.find({agentB: { $ne: null } });
+    const assignReclamations = await AssignReclamation.find({agentB: { $ne: null } }).populate('reclamation');;
     res.status(200).send(assignReclamations);
   } catch (error) {
     res.status(400).send({ message: 'Failed to get assignReclamations to agent Bureau .', error });
@@ -52,8 +52,8 @@ exports.getAssignReclamationByAgentB = async (req, res) => {
  const idAgentB= req.params.agentB
  console.log(idAgentB)
   try {
-    const assignReclamations = await AssignReclamation.find({ agentB: idAgentB })
-      .populate('reclamation');
+    const assignReclamations = await AssignReclamation.find({ agentB: { $ne: null } })
+    .populate('reclamation');
 
     if (!assignReclamations || assignReclamations.length === 0) {
       return res.status(404).send({ message: 'No AssignReclamations found for the agentM.' });

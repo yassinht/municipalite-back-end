@@ -9,4 +9,10 @@ router.get('/', citoyenController.getAllCitoyens);
 
 router.post('/:id', citoyenController.getCitoyenById);
 
+router.put('/:id', citoyenController.updatedcitoyen);
+
+
+router.delete('/:id', citoyenController.deleteCitoyenById);
+
+
 module.exports = router;

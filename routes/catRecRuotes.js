@@ -7,5 +7,10 @@ router.post('/', categoryReclamationController.createCategory);
 
 router.get('/', categoryReclamationController.getCategoryRec);
 
+// Delete a category
+router.delete('/:id', categoryReclamationController.deleteCategory);
+
+// Update a category
+router.put('/:id', categoryReclamationController.updateCategory);
 
 module.exports = router;

@@ -21,37 +21,30 @@ exports.createAgentM = async (req, res) => {
     let obj = req.body;
     let agentM = new AgentM(obj);
 
-    let findEmailInAgentB = await AgentB.findOne({ email: agentM.email });
     let findEmailInAgentM = await AgentM.findOne({ email: agentM.email });
 
-    if (!findEmailInAgentB && !findEmailInAgentM) {
-      try {
-        const salt = bcrypt.genSaltSync(10);
-        agentM.password = bcrypt.hashSync(agentM.password, salt);
-        filename1[0] ? (agentM.photo = filename1[0]) : (agentM.photo = 'default.png');
-        agentM.account_state = true;
-        agentM.archived = false;
-        agentM.added_date = new Date();
+    if (!findEmailInAgentM) {
+      const salt = bcrypt.genSaltSync(10);
+      agentM.password = bcrypt.hashSync(agentM.password, salt);
+      agentM.photo = filename1[0] ? filename1[0] : 'default.png';
+      
+      let savedAgentM = await agentM.save();
+      filename1 = [];
 
-        let savedAgentM = await agentM.save();
-        filename1 = [];
-
-        if (!savedAgentM) {
-          res.status(404).send('not found');
-        } else {
-          res.status(200).send(savedAgentM);
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(400).send({ message: 'Erreur', error });
+      if (!savedAgentM) {
+        res.status(404).send('not found');
+      } else {
+        res.status(200).send(savedAgentM);
       }
     } else {
-      res.status(404).send('email invalid');
+      res.status(400).send('email invalid');
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send({ message: 'Erreur', error });
   }
 };
+
   exports.login =  async (req, res) => {
     try {
       let agentMData = req.body
@@ -109,7 +102,7 @@ exports.createAgentM = async (req, res) => {
 
   exports.getAll = async (req, res) => {
     try {
-      let agentMs = await AgentM.find()
+      let agentMs = await AgentM.find().populate('responsabilite');
       res.status(200).send(agentMs);
     } catch (error) {
       res.status(400).send({ message: "Erreur", error });
@@ -117,29 +110,33 @@ exports.createAgentM = async (req, res) => {
   };
   
 
-
   exports.updatedagentM = async (req, res) => {
     try {
       let id = req.params.id;
-      let data = req.body
+      let data = req.body;
   
-      data.password ? data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)) : delete data.password
-  
-      let updatedagentM = await AgentM.findByIdAndUpdate({ _id: id }, data, { new: true })
-  
-      if (!updatedagentM) {
-        return res.status(404).send({ message: "Not found" })
+      if (data.password) {
+        const salt = bcrypt.genSaltSync(10);
+        data.password = bcrypt.hashSync(data.password, salt);
       } else {
-        let payload = { subject: updatedagentM }
-        let token = jwt.sign(payload, 'secretKey')
-        return res.status(200).send({ token });
+        delete data.password;
       }
   
+      let updatedagentM = await AgentM.findByIdAndUpdate({ _id: id }, data, { new: true });
+  
+      if (!updatedagentM) {
+        return res.status(404).send({ message: "Not found" });
+      } else {
+        let payload = { subject: updatedagentM };
+        let token = jwt.sign(payload, 'secretKey');
+        return res.status(200).send({ token });
+      }
     } catch (error) {
       console.log(error);
       res.status(400).send({ message: "Erreur", error });
     }
   };
+  
 
 
   exports.deleteById =  async (req, res) => {

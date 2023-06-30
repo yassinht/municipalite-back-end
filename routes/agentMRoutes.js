@@ -28,7 +28,7 @@ const storage = multer.diskStorage(
 const upload = multer({ storage: storage });
 
 
-router.post('/', upload.any('image'), agentMController.createAgentM);
+router.post('/', agentMController.createAgentM);
 
 router.post('/login', agentMController.login);
 

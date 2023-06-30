@@ -5,8 +5,6 @@ const OpinionController=require('../controllers/opinionController')
 
 router.post('/', OpinionController.addOpinion);
 
-router.get('/reclamations/:reclamationId', OpinionController.getOpinionsByReclamation);
-
 // Delete an opinion
 router.delete('/:opinionId', OpinionController.deleteOpinion);
 
