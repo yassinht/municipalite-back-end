@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
-const AnnonceSchema = new mongoose.Schema({
-  sujet: { type: String, required: true },
+const annonceSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  dateAjout: { type: Date, default: Date.now },
+  pdfFile: { type: String, required: true },
 });
 
-const Annonce = mongoose.model('Annonce', AnnonceSchema);
+const Annonce = mongoose.model('Annonce', annonceSchema);
 
 module.exports = Annonce;

@@ -1,9 +1,10 @@
 const { Reclamation } = require('../models/reclamation');
+const path = require('path');
 
 
 exports.createReclamation = async (req, res) => {
   try {
-    const { municipalite, adresse, category ,status} = req.body;
+    const { municipalite, adresse, category, status } = req.body;
     const { filename } = req.file; // Get the filename of the uploaded photo
 
     const reclamation = new Reclamation({
@@ -15,11 +16,16 @@ exports.createReclamation = async (req, res) => {
     });
 
     await reclamation.save();
-    res.status(201).send({ message: 'Reclamation created successfully.' });
+
+    // Construct the image URL to send back in the response
+    const imageURL = `/images/${filename}`;
+
+    res.status(201).send({ message: 'Reclamation created successfully.', imageURL });
   } catch (error) {
     res.status(400).send({ message: 'Error creating reclamation.', error });
   }
 };
+
 
 exports.getAllReclamations = async (req, res) => {
     try {
@@ -73,5 +79,23 @@ exports.updateReclamation = async (req, res) => {
     res.status(200).send({ message: 'Reclamation updated successfully.' });
   } catch (error) {
     res.status(400).send({ message: 'Error updating reclamation.', error });
+  }
+};
+
+
+exports.serveImageByReclamationId = async (req, res) => {
+  try {
+    const { reclamationId } = req.params;
+
+    const reclamation = await Reclamation.findById(reclamationId);
+    if (!reclamation || !reclamation.image) {
+      return res.status(404).send({ message: 'Reclamation or image not found.' });
+    }
+
+    const imagePath = path.join(__dirname, '../uploads', reclamation.image);
+
+    res.sendFile(imagePath);
+  } catch (error) {
+    res.status(400).send({ message: 'Error serving image.', error });
   }
 };

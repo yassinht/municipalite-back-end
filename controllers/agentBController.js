@@ -17,15 +17,45 @@ let filename1 = [];
 
 
 exports.createAgentB=   async (req, res) => {
-  try {
-    const agentB = new AgentB(req.body);
-    await agentB.save();
-    res.status(201).json(agentB);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
+    try {
+      let obj = req.body;
+      let agentB = new AgentB(obj);
+  
+  
+      let findEmailInAgentB = await AgentB.findOne({ email: agentB.email })
+  
+  
+      if (!findEmailInAgentB ) {
+  
+        try {
+          const salt = bcrypt.genSaltSync(10);
+          // now we set user password to hashed password
+          agentB.password = bcrypt.hashSync(agentB.password, salt);
+    
+  
+          let savedagentB = await agentB.save()
+          filename1 = []
+  
+          if (!savedagentB) {
+            return res.status(404).send('not found')
+          } else {
+            return res.status(200).send(savedagentB);
+          }
+        } catch (error) {
+          return res.status(400).send({ message: "Erreur", error });
+        }
+  
+  
+      } else {
+        return res.status(404).send('email invalid')
+      }
+  
+  
+    } catch (error) {
+      return res.status(400).send({ message: "Erreur", error });
+    }
+  };
+
   exports.login =async (req, res) => {
 
     try {

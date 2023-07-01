@@ -23,6 +23,7 @@ const reclamationRoutesApi = require('./routes/reclamationRoutes');
 const asseignRoutesApi = require('./routes/assignReclamationRoutes');
 const opinionRoutesApi = require('./routes/opinionRoutes');
 const confirmRoutesApi = require('./routes/confirmRoutes');
+const annonceRoutesApi = require('./routes/annonceRoutes');
 
 
 
@@ -65,6 +66,7 @@ app.use('/reclamation', reclamationRoutesApi);
 app.use('/asseign', asseignRoutesApi);
 app.use('/opinion', opinionRoutesApi);
 app.use('/confirm', confirmRoutesApi);
+app.use('/annonce', annonceRoutesApi);
 
 
 
