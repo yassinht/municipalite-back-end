@@ -26,8 +26,7 @@ exports.assignReclamationToAgentB = async (req, res) => {
     });
     await assignReclamation.save();
 
-    // Update the status of the assigned reclamation to true
-    await Reclamation.findByIdAndUpdate(reclamationId, { status: true });
+    
 
     res.status(200).send({ message: 'Reclamation assigned to AgentB successfully.', reclamation });
   } catch (error) {
@@ -106,8 +105,6 @@ exports.assignReclamationToAgentM = async (req, res) => {
       });
       await assignReclamation.save();
   
-      // Update the status of the assigned reclamation to true
-      await Reclamation.findByIdAndUpdate(reclamationId, { status: true });
   
       res.status(200).send({ message: 'Reclamation assigned to AgentM successfully.', reclamation });
     } catch (error) {

@@ -17,7 +17,10 @@ const ReclamationSchema = new mongoose.Schema({
   }
 });
 
+ReclamationSchema.statics.findByIdAndUpdate = async function (id, update) {
+  return this.findOneAndUpdate({ _id: id }, update, { new: true });
+};
 
-const Reclamation = mongoose.model('reclamation', ReclamationSchema);
+const Reclamation = mongoose.model('Reclamation', ReclamationSchema);
 
-module.exports = { Reclamation };
+module.exports = Reclamation;

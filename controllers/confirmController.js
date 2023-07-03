@@ -4,24 +4,29 @@ const AssignReclamation = require('../models/assignReclamation');
 
 
 exports.addConfirmation = async (req, res) => {
-    try {
-      const { reclamationId, assignedReclamationId, text } = req.body;
-      const { filename } = req.file;
-  
-      const confirmation = new ConfirmedReclamation({
-        reclamation: reclamationId,
-        assignedReclamation: assignedReclamationId,
-        text,
-        photo: filename
-      });
-  
-      await confirmation.save();
-  
-      res.status(201).send({ message: 'Confirmation added successfully.', confirmation });
-    } catch (error) {
-      res.status(400).send({ message: 'Failed to add confirmation.', error });
-    }
-  };
+  try {
+    const { reclamationId, assignedReclamationId, text } = req.body;
+    const { filename } = req.file;
+
+    const confirmation = new ConfirmedReclamation({
+      reclamation: reclamationId,
+      assignedReclamation: assignedReclamationId,
+      text,
+      photo: filename
+    });
+
+    await confirmation.save();
+
+    await Reclamation.findByIdAndUpdate(reclamationId, { status: true });
+
+    await AssignReclamation.findByIdAndUpdate(assignedReclamationId, { statusAR: true });
+
+    res.status(201).send({ message: 'Confirmation added successfully.', confirmation });
+  } catch (error) {
+    console.log(error); // Log the error to the console
+    res.status(400).send({ message: 'Failed to add confirmation.', error });
+  }
+};
   
 exports.getConfirmationsByReclamation = async (req, res) => {
   try {
